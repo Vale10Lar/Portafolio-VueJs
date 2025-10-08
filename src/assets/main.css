@@ -1,0 +1,44 @@
+@import './base.css'; /* Importa la hoja de estilos 'base.css' que contiene las variables de color y tipografía */
+
+/* ESTILOS PARA EL CONTENEDOR PRINCIPAL DE LA APLICACION */
+#app {
+  max-width: 1280px; /* Limita el ancho del contenedor para mejorar la legibilidad en pantallas grandes */
+  margin: 0 auto; /* Centra el contenedor horizontalmente en la página */
+  padding: 2rem; /* Añade un espacio de 2rem ( 32px aprox) alrededor del contenido interno del contenedor */
+  font-weight: normal; /* Asegura que el texto dentro de la app tenga un peso de fuente regular */
+}
+
+/* ESTILOS PARA HIPERVINCULOS */
+a {
+  text-decoration: none; /* Elimina el subrayado por defecto de los enlaces */
+  color: var(--vt-c-white); /* Establece el color de los enlaces usando la variable de color 'blanco' (Lila Pálido Suave) */
+}
+
+/* Media Query para pantallas pequeñas/tabletas (hasta 768px de ancho) */
+@media (max-width: 768px) {
+  #app {
+    display: flex; /* Convierte el contenedor en un contenedor flexible */
+    flex-direction: column; /* Apila los elementos hijos en una columna vertical */
+    font-size: small; /* Reduce el tamaño de la fuente para un mejor ajuste en pantalla */
+  }
+}
+
+/* Media Query para pantallas de escritorio (desde 1024px de ancho) */
+@media (min-width: 1024px) {
+  #app {
+    display: flex; /* Mantiene el contenedor como un flexbox */
+    flex-direction: column; /* Apila los elementos hijos en una columna vertical */
+    width: 80%; /* Establece el ancho del contenedor al 80% de la pantalla para dejar márgenes */
+  }
+}
+
+/* Media Query para pantallas de laptops (Rango: 1024px a 1439px de ancho) */
+
+@media (min-width: 1024px) and (max-width: 1439px){
+  #app {
+    display: flex; /* Mantiene el contenedor como un flexbox */
+    flex-direction: column; /* Apila los elementos hijos en una columna vertical */
+    width: 90%; /* Ajustamos el ancho al 90% para este rango, asegurando espacio. */
+  }
+}
+

@@ -1,0 +1,161 @@
+/*
+ * PALETA DE COLORES PERSONALIZADA: "NEON LIGHTS",(manteniendo el nombre de las variables)
+ * Define las variables de color y los estilos base de la aplicación.
+ * Nota personal: El bloque :root SOLO contiene variables, no estilos.
+*/
+:root {
+  /* 1. PALETA NEÓN (FONDO Y ACENTOS) */
+
+  /* Colores de FONDO (Base Oscura para que el neón resalte) */
+  --vt-c-black:        #03091B; /* AZUL NOCHE PROFUNDO (Fondo Principal) */
+  --vt-c-black-soft:   #151B33; /* Índigo profundo (Fondo de Tarjetas/Secciones y la zona oscura del NAV) */
+  --vt-c-black-mute:   #283049; /* Azul Pizarra (Para bordes y líneas divisorias) */
+
+  /* Colores de Texto/contenido (Para legibilidad) */
+  --vt-c-white:        #EBE0FF; /* Lila Pálido Suave (Texto principal) */
+  --vt-c-white-soft:   #B8B8D1; /* Usado para texto secundario o párrafos */
+  
+  /* Colores de acento neón */
+  --vt-c-indigo:       #D8076A; /* ACENTO PRINCIPAL: Rosa neón fuerte (títulos y hover) */
+  --vt-c-cyan:         #00FFFF; /* Cían/Aqua puro para MÁXIMO BRILLO (brillos y hover) */
+
+  /* 2. VARIABLES SEMÁNTICAS (Asignan los colores a roles) */
+  --color-background: var(--vt-c-black); /* Fondo general del body */
+  --color-background-soft: var(--vt-c-black-soft); 
+  --color-heading: var(--vt-c-indigo); /* Color de los Títulos (Rosa neón) */
+  --color-text: var(--vt-c-white-soft); /* Color de los párrafos y texto normal */
+}
+
+/* FUENTES DE TÍTULOS (Orbitron) y TEXTO (Inter) */
+/* (estan enlazadas con index.html) */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap');
+
+/* ESTILOS GLOBALES Y RESETEO */
+
+*, *::before, *::after {
+  box-sizing: border-box; 
+  margin: 0; 
+  font-weight: normal;
+}
+li{ 
+  list-style: none; 
+}
+
+/* ESTILOS BASE del body */
+
+body {
+  min-height: 100vh; 
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s; 
+  font-family: 'Inter', sans-serif; /* Fuente base para el cuerpo de texto (legibilidad) */
+
+  /* DETALLE DE FONDO: Efecto nebulosa/gradiente sutil */
+  background-image: radial-gradient(
+      at 10% 10%, rgba(216, 7, 106, 0.1), transparent 50%), 
+      radial-gradient(
+      at 90% 90%, rgba(0, 255, 255, 0.15), transparent 50%); 
+      
+  background-color: var(--color-background);
+
+  /* EFECTO FUTURISTA: Sombra interior para marco de pantalla*/
+  box-shadow: 
+      inset 0 0 200px rgba(0, 0, 0, 0.8), 
+      inset 0 0 100px rgba(0, 0, 0, 0.4); 
+  
+  line-height: 1.6; 
+  font-size: 15px;
+  text-rendering: optimizeLegibility; 
+  -webkit-font-smoothing: antialiased; 
+  -moz-osx-font-smoothing: grayscale; 
+}
+
+/* NAVEGACION (BARRA FLOTANTE Y DEGRADADO) */
+
+nav, .nav-bar { 
+  background: linear-gradient(
+      90deg, 
+      var(--vt-c-cyan) 3%,        
+      var(--vt-c-black-soft) 50%, 
+      var(--vt-c-indigo) 95%      
+  );
+  
+  padding: 20px 20px; 
+  border-radius: 12px; 
+  
+  /* Sombra de flotacion y resplandor */
+  box-shadow: 
+      0 8px 25px rgba(0, 0, 0, 0.6), 
+      0 0 10px rgba(0, 255, 255, 0.5); 
+  
+  /* Borde inferior con degradado cian/rosa (efecto de marco neon) */
+  border-bottom: 3px solid transparent; 
+  border-image: linear-gradient( 
+      to right, 
+      var(--vt-c-cyan), 
+      var(--vt-c-indigo), 
+      var(--vt-c-cyan) 
+  ) 1; 
+}
+
+/* ENLACES DE LA NAVEGACION: los botones */
+
+nav a, .nav-bar a {
+  color: #FFFFFF; 
+  text-decoration: none; 
+  padding: 8px 15px; 
+  display: inline-block; 
+  
+  font-family: 'Orbitron', sans-serif; 
+  font-weight: 400; 
+  letter-spacing: 1px; 
+
+  transition: all 0.2s ease-in-out; 
+  
+  /* Sombra cian sutil constante */
+  text-shadow: 
+      0 0 1px var(--vt-c-cyan), 
+      0 0 1px var(--vt-c-cyan); 
+}
+
+/* EFECTO HOVER: el Cian sobre Rosa */
+nav a:hover, .nav-bar a:hover,
+nav a.active, .nav-bar a.active {
+  background-color: var(--vt-c-indigo); 
+  color: var(--vt-c-cyan); 
+  border-radius: 4px; 
+  /* Brillo cian potente para el texto */
+  text-shadow: 
+      0 0 25px var(--vt-c-cyan), 
+      0 0 50px var(--vt-c-cyan); 
+  
+  border-bottom: none; 
+}
+
+/* ESTILOS DE SECCIÓN Y TÍTULOS */
+
+section {
+  padding: 2rem;
+  border-bottom: 1px solid var(--vt-c-black-mute); 
+  margin: 3rem 0rem 2rem 0rem; 
+}
+section h2{
+  font-size: 2rem;
+  color: var(--color-heading); /* Rosa Neón */
+  margin-bottom: 1.5rem;
+  text-align: center;
+  
+  font-family: 'Orbitron', sans-serif; 
+  font-weight: 700; 
+  letter-spacing: 2px;
+  
+  /* EFECTO NEÓN EN TÍTULOS */
+  text-shadow: 
+      0 0 10px rgba(216, 7, 106, 0.8), /* Brillo fuerte rosa neon */
+      0 0 20px rgba(216, 7, 106, 0.3); /* Resplandor difuso */
+}
+
+section h3{
+  color: var(--vt-c-white); 
+  font-family: 'Orbitron', sans-serif; 
+}
