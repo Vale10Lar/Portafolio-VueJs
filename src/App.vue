@@ -5,16 +5,12 @@ import DatosPersonales from './components/DatosPersonales.vue'
 
 <template>
   <header>
-    <!-- BARRA DE NAVEGACIÓN -->
     <NavBar/>
     
-    <!-- Componente DATOS PERSONALES -->
     <DatosPersonales/>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL (Aquí voy a seguir agregando las demas seccione ) -->
   <main>
-    <!-- Las secciones restantes se crearán como componentes  -->
     <section id="educacion"><h2>Educación - Cursos</h2></section>
     <section id="experiencia"><h2>Experiencia</h2></section>
     <section id="proyectos"><h2>Proyectos</h2></section>
@@ -23,4 +19,5 @@ import DatosPersonales from './components/DatosPersonales.vue'
   </main>
 </template>
 <style scoped>
+/* No se necesitan estilos con scope en App.vue, ya que main.css maneja el layout general */
 </style>
