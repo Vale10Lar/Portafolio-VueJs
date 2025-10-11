@@ -97,8 +97,7 @@ const navegacion = ref([
 </script>
 
 <style scoped>
-/*  SOLUCIÓN CONTRA ERROR 500 (la solucion que anda es definir las variables en : root): 
- * Definición simplificada de variables para asegurar la compilación scoped. */
+/* Definición simplificada de variables para asegurar la compilación scoped. */
 :root {
   --vt-c-cyan: #00ffff;
   --vt-c-indigo: #a855f7; 
