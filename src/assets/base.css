@@ -1,74 +1,83 @@
 /* ARCHIVO BASE CSS (Variables y Reseteo) */
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap");
 
-/* PALETA DE COLORES PERSONALIZADA: "NEON LIGHTS"
-  Define las variables de color globales para toda la aplicación.
- */
-
+/* PALETA DE COLORES PERSONALIZADA: "NEON LIGHTS" */
 :root {
-  /* 1. PALETA NEÓN (FONDO Y ACENTOS) */
+  /* ... (Tus variables de color) ... */
+  --vt-c-black: #03091b; 
+  --vt-c-black-soft: #151b33; 
+  --vt-c-black-mute: #283049; 
+  --vt-c-white: #ebe0ff; 
+  --vt-c-white-soft: #b8b8d1; 
+  --vt-c-indigo: #a855f7; /* Púrpura principal */
+  --vt-c-cyan: #00ffff; /* Cyan de contraste */
+  --vt-c-magenta-original: #ff1493; /* Rosa de contraste */
 
-  /* Colores de FONDO (Base Oscura para que el neón resalte) */
-  --vt-c-black: #03091b;       /* AZUL NOCHE PROFUNDO (Fondo Principal) */
-  --vt-c-black-soft: #151b33;  /* Índigo profundo (Fondo de Tarjetas/Secciones y la zona oscura del NAV) */
-  --vt-c-black-mute: #283049;  /* Azul Pizarra (Para bordes y líneas divisorias) */
-
-  /* Colores de Texto/contenido (Para legibilidad) */
-  --vt-c-white: #ebe0ff;       /* Lila Pálido Suave (Texto principal) */
-  --vt-c-white-soft: #b8b8d1;  /* Texto secundario o párrafos (Mejor legibilidad) */
-
-  /* Colores de acento neón */
-  --vt-c-indigo: #a855f7;      /* ACENTO PRINCIPAL: Púrpura neón fuerte */
-  --vt-c-cyan: #00ffff;        /* Cían/Aqua puro para MÁXIMO BRILLO */
-
-  /* Variables específicas para el degradado/neón */
-  --vt-c-magenta-original: rgb(168, 85, 247); 
-  --vt-c-cyan-original: rgb(0, 255, 255);
-  --vt-c-dark-original: rgb(14, 25, 45);
-
-  /* 2. VARIABLES SEMÁNTICAS (Asignan los colores a roles específicos) */
-  --color-background: var(--vt-c-black);        /* Fondo general del body */
-  --color-background-soft: var(--vt-c-black-soft); /* Fondo de contenedores secundarios */
-  --color-heading: var(--vt-c-indigo);           /* Color de los Títulos (Púrpura neón) */
-  --color-text: var(--vt-c-white-soft);         /* Color de los párrafos y texto normal */
+  /* VARIABLES SEMÁNTICAS */
+  --color-background: var(--vt-c-black); 
+  --color-background-soft: var(--vt-c-black-soft); 
+  --color-heading: var(--vt-c-indigo); 
+  --color-text: var(--vt-c-white-soft); 
+  
+  --vt-c-dark-bg: var(--vt-c-black); 
+  --vt-c-card-dark: var(--vt-c-black-soft);
 }
 
-
-/* ESTILOS GLOBALES Y RESETEO CSS  */
-
+/* ESTILOS GLOBALES Y RESETEO CSS */
 *,
 *::before,
 *::after {
-  box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho/alto total del elemento */
-  margin: 0;             /* Elimina los márgenes por defecto de los navegadores */
-  font-weight: normal;   /* Establece un peso de fuente por defecto */
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-weight: normal; 
 }
 li {
-  list-style: none; /* Elimina los puntos/viñetas de las listas */
+  list-style: none; 
 }
 
-/* ESTILOS BASE del body (Contenedor principal) */
+/* ---------------------------------------------------------------------- */
+/* --- SOLUCIÓN DEFINITIVA PARA LA FRANJA BLANCA/GRIS --- */
+/* ---------------------------------------------------------------------- */
+
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* CLAVE: Evita el scroll horizontal */
+    background: var(--color-background); 
+}
+
+#app {
+    width: 100%;
+    min-height: 100vh;
+}
+
 body {
-  min-height: 100vh;                       /* Asegura que el body ocupe al menos toda la altura de la vista */
-  color: var(--color-text);                /* Color de texto usando la variable semántica */
-  background: var(--color-background);     /* Color de fondo usando la variable semántica */
-  transition: color 0.5s, background-color 0.5s; /* Transición suave de colores (útil para temas claro/oscuro) */
-  font-family: "Inter", sans-serif;        /* Fuente para el texto principal (Inter) */
-  line-height: 1.6;                        /* Espacio entre líneas para mejor legibilidad */
-  font-size: 15px;                         /* Tamaño de fuente base */
-  text-rendering: optimizeLegibility;      /* Optimiza la renderización del texto */
-  -webkit-font-smoothing: antialiased;     /* Mejora el suavizado de la fuente en WebKit */
-  -moz-osx-font-smoothing: grayscale;      /* Mejora el suavizado de la fuente en Firefox */
-
-  /* DETALLE DE FONDO: Efecto nebulosa/gradiente sutil */
-  background-image: 
-    radial-gradient(at 10% 10%, rgba(168, 85, 247, 0.1), transparent 50%), /* Degradado púrpura */
-    radial-gradient(at 90% 90%, rgba(0, 255, 255, 0.15), transparent 50%); /* Degradado cian */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; 
+  color: var(--color-text); 
+  background: transparent; 
   
-  background-color: var(--color-background); /* Asegura el color de fondo principal */
+  font-family: "Inter", sans-serif; 
+  line-height: 1.6; 
+  font-size: 15px; 
+  
+  /* DETALLE DE FONDO: Efecto nebulosa/gradiente sutil */
+  background-image: radial-gradient(at 10% 10%, rgba(168, 85, 247, 0.1), transparent 50%),
+    radial-gradient(at 90% 90%, rgba(0, 255, 255, 0.15), transparent 50%); 
+  background-color: var(--color-background); 
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.8), inset 0 0 100px rgba(0, 0, 0, 0.4);
+  cursor: none; 
+}
 
-  /* EFECTO FUTURISTA: Sombra interior para marco de pantalla (sutil) */
-  box-shadow: 
-    inset 0 0 200px rgba(0, 0, 0, 0.8), 
-    inset 0 0 100px rgba(0, 0, 0, 0.4);
+/* ... (Estilos de cursor-particle) ... */
+.cursor-particle {
+  position: fixed; 
+  border-radius: 50%;
+  pointer-events: none; 
+  z-index: 9999; 
+  opacity: 1; 
 }
