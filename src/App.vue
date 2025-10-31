@@ -1,159 +1,323 @@
 <script setup>
-import { ref } from 'vue'; 
-import NavBar from './components/NavBar.vue' 
-import DatosPersonales from './components/DatosPersonales.vue'
-import EducacionCursos from './components/EducacionCursos.vue' 
+import { ref } from "vue";
+import NavBar from "./components/NavBar.vue";
+import DatosPersonales from "./components/DatosPersonales.vue";
+import EducacionCursos from "./components/EducacionCursos.vue";
+import ExperienciaLaboral from "./components/ExperienciaLaboral.vue";
 
-const datosPersonalesRef = ref(null); 
+const datosPersonalesRef = ref(null);
 
-function handleContactoClick() {
-    // Lógica para voltear la tarjeta de perfil
-    const cardElement = document.getElementById('perfil-card-target');
-    
-    if (cardElement) {
-        const rect = cardElement.getBoundingClientRect();
-        const sidebarWidth = 200; 
-        
-        const isVisible = rect.top >= 50 && 
-                          rect.bottom <= window.innerHeight - 50 &&
-                          rect.left >= sidebarWidth; 
-
-        if (isVisible) {
-            if (datosPersonalesRef.value && typeof datosPersonalesRef.value.flipCard === 'function') {
-                datosPersonalesRef.value.flipCard();
-            }
-        } else {
-            cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    } else {
-        console.error("Error: Elemento con ID 'perfil-card-target' no encontrado. ¿Está en DatosPersonales.vue?");
-    }
+// FUNCIÓN CLAVE: Desplazamiento al área de la barra de navegación/perfil
+function scrollToProfileArea() {
+  const profileArea = document.getElementById("profile-area-target");
+  if (profileArea) {
+    // CLAVE: Desplaza suavemente hasta el inicio del área del perfil
+    profileArea.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else {
+    console.error("Error: Elemento con ID 'profile-area-target' no encontrado.");
+  }
 }
+
+// Función para el botón de contacto (Mantiene su funcionalidad original)
+function handleContactoClick() {
+  // 1. Voltear la tarjeta (si está visible)
+  if (datosPersonalesRef.value && typeof datosPersonalesRef.value.flipCard === "function") {
+    datosPersonalesRef.value.flipCard();
+  }
+
+  // 2. Desplazarse al área de la tarjeta
+  scrollToProfileArea();
+}
+
+/**
+ * NOTA: Eliminamos la definición del componente inline 'ScrollToTopButton'
+ * para simplificar y usamos directamente un botón en el template para la versión fija.
+ */
 </script>
 
 <template>
-    <header class="sidebar-container">
-        <NavBar @contacto-click="handleContactoClick" />
+  <div id="app-portfolio">
+    <!-- 1. BARRA DE NAVEGACIÓN (PEGADA ARRIBA) -->
+    <header class="navbar-container">
+      <NavBar @contacto-click="handleContactoClick" />
     </header>
-    
-    <div class="content-wrapper">
-        <div class="profile-area">
-            <DatosPersonales ref="datosPersonalesRef" />
-        </div>
 
-        <main class="scrollable-content">
-            <section id="educacion" class="portfolio-section full-viewport-section">
-                <EducacionCursos />
-            </section>
-            
-            <section id="experiencia" class="portfolio-section full-viewport-section centered-content">
-                <h2 class="section-title">Experiencia Laboral</h2>
-                <div class="placeholder-card">
-                    <p>Esta sección se cargará una vez que generemos ExperienciaLaboral.vue.</p>
-                </div>
-            </section>
-        </main>
+    <!-- 2. CONTENEDOR PRINCIPAL DEL CONTENIDO (Scrollable) -->
+    <div class="content-wrapper">
+      <!-- ÁREA DE PERFIL (Tarjeta DatosPersonales) - Ocupa el 100vh inicial -->
+      <div id="profile-area-target" class="portfolio-section profile-area">
+        <!-- El componente DatosPersonales se centra aquí -->
+        <DatosPersonales ref="datosPersonalesRef" />
+      </div>
+
+      <!-- CONTENIDO SCROLLABLE (Educación y abajo) -->
+      <main class="scrollable-content">
+        <!-- SECCIÓN EDUCACIÓN: Se le pasa la función de retorno como prop -->
+        <section id="educacion" class="portfolio-section scrollable-section">
+          <EducacionCursos :on-return-to-top="scrollToProfileArea" />
+        </section>
+
+        <!-- SECCIÓN EXPERIENCIA: Se le pasa la función de retorno como prop -->
+        <section id="experiencia" class="portfolio-section scrollable-section">
+          <!-- IMPORTANTE: El componente ExperienciaLaboral debe implementar esta prop -->
+          <ExperienciaLaboral :on-return-to-top="scrollToProfileArea" />
+        </section>
+
+        <!-- SECCIÓN PROYECTOS (Placeholder): Se añade el botón directamente -->
+        <section id="proyectos" class="portfolio-section scrollable-section centered-content relative-section">
+          <h2 class="section-title">Proyectos</h2>
+          <div class="placeholder-card">
+            <p>Contenido de la sección Proyectos.</p>
+          </div>
+          <!-- Botón de retorno local para la sección -->
+         
+        </section>
+
+        <!-- SECCIÓN HABILIDADES (Placeholder): Se añade el botón directamente -->
+        <section id="habilidades" class="portfolio-section scrollable-section centered-content relative-section">
+          <h2 class="section-title">Habilidades</h2>
+          <div class="placeholder-card">
+            <p>Contenido de la sección Habilidades.</p>
+          </div>
+       
+
+        </section>
+      </main>
     </div>
+
+    <!-- BOTÓN DE SCROLL FIJO GLOBAL (Opción adicional para usabilidad) -->
+
+  </div>
 </template>
 
 <style scoped>
 /* ------------------------------------------------------------- */
-/* ESTILOS DE LAYOUT CRUCIALES (SOLUCIÓN BARRA FIJA Y NEÓN) */
+/* VARIABLES CLAVE DE DISEÑO */
 /* ------------------------------------------------------------- */
-
-/* 1. BARRA LATERAL: FIJA Y CON ESTILO NEON DE TARJETA */
-.sidebar-container {
-    position: fixed; /* CLAVE: Mantiene la barra pegada al viewport */
-    top: 20px; /* Margen de la parte superior */
-    left: 20px; /* Margen de la parte izquierda */
-    width: 200px; 
-    height: calc(100vh - 40px); /* 100% de la altura menos los 20px de top y 20px de bottom */
-    z-index: 100; 
-    
-    /* ESTILO NEÓN DE TARJETA */
-    background: var(--vt-c-card-dark); 
-    border: 2px solid var(--vt-c-indigo); 
-    border-radius: 16px;
-    box-shadow: 
-        0 0 10px rgba(168, 85, 247, 0.7), 
-        0 0 20px rgba(168, 85, 247, 0.3), 
-        inset 0 0 5px rgba(168, 85, 247, 0.5); 
-
-    overflow-y: auto; /* Permite scroll interno si la barra es demasiado pequeña */
+:root {
+  --navbar-height: 80px; /* Altura de la nueva barra superior */
+  --content-gap: 30px;
+  --max-content-width: 1100px; /* Ancho máximo para el contenido scrollable */
+  /* Colores */
+  --vt-c-card-dark: #151b33;
+  --vt-c-indigo: #a855f7;
+  --vt-c-black: #03091b;
+  --vt-c-cyan: #00ffff;
+  --vt-c-magenta: #ff00ff;
+  --vt-c-white: #ebe0ff;
+  --neon-green: #39ff14; /* Color para los botones de retorno */
 }
 
-/* 2. CONTENEDOR DE CONTENIDO (LADO DERECHO) */
+/* El contenedor principal de la App */
+#app-portfolio {
+  background-color: var(--vt-c-black);
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column; 
+  overflow-x: hidden;
+}
+
+/* ======================================================= */
+/* 1. BARRA SUPERIOR (PEGADA Y CENTRADA)*/
+/* ======================================================= */
+.navbar-container {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: var(--navbar-height);
+  z-index: 1000;
+  background: var(--vt-c-card-dark);
+  border-bottom: 2px solid var(--vt-c-indigo);
+  box-shadow: 0 5px 10px rgba(168, 85, 247, 0.5), 0 0 10px rgba(168, 85, 247, 0.3);
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* ======================================================= */
+/* 2. CONTENEDOR PRINCIPAL DEL CONTENIDO (content-wrapper) */
+/* ======================================================= */
 .content-wrapper {
-    /* CLAVE: Empuja el contenido 240px a la derecha (200px barra + 20px margen izq + 20px separación) */
-    margin-left: 240px; 
-    width: calc(100% - 240px);
-    display: grid;
-    grid-template-columns: 1fr; 
-    grid-template-rows: 100vh auto; 
-    min-height: 100vh;
+  width: 100%;
+  min-height: calc(100vh - var(--navbar-height)); 
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px; 
 }
 
-/* 3. ÁREA DE PERFIL (TARJETA): Fila 1 */
+/* 3. ÁREA DE PERFIL (Centrado de la Tarjeta) */
 .profile-area {
-    grid-row: 1 / 2; 
-    width: 100%;
-    height: 100vh; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px;
+  height: calc(100vh - var(--navbar-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* 4. CONTENIDO SCROLLABLE: Fila 2 */
+/* 4. CONTENIDO SCROLLABLE (El contenedor principal de Educación y abajo) */
 .scrollable-content {
-    grid-row: 2 / 3; 
-    width: 100%; 
-    padding-left: 10px; 
-    padding-right: 10px;
+  width: 100%;
+  padding: 5rem 0;
+  box-sizing: border-box;
 }
 
-/* ... (Otros estilos auxiliares) ... */
-.full-viewport-section {
-    min-height: auto; 
-    padding-top: 5rem; 
-    padding-bottom: 5rem;
+/* ------------------------------------------------------------- */
+/* ESTILOS DE SECCIONES SCROLLABLES (EDUCACION, EXPERIENCIA, etc.) */
+/* ------------------------------------------------------------- */
+.portfolio-section.scrollable-section {
+  min-height: 100vh;
+  padding: 5rem var(--content-gap); 
+  border-bottom: 1px dashed rgba(168, 85, 247, 0.2);
+  box-sizing: border-box;
+  max-width: var(--max-content-width);
+  margin: 0 auto; 
 }
+
+.portfolio-section:last-child {
+  border-bottom: none;
+  min-height: auto;
+}
+
+/* Clase para que el botón local funcione con position: absolute */
+.relative-section {
+    position: relative;
+}
+
 .centered-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-.portfolio-section {
-    padding: 3rem 1rem;
-    border-bottom: 1px dashed rgba(168, 85, 247, 0.2); 
-    margin-bottom: 2rem;
-}
+
 .section-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--vt-c-indigo); 
-    text-align: center;
-    margin-bottom: 2.5rem;
-    text-shadow: 
-     0 0 5px var(--vt-c-indigo), 
-     0 0 15px rgba(168, 85, 247, 0.5);
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--vt-c-cyan);
+  text-shadow: 0 0 5px var(--vt-c-cyan), 0 0 15px rgba(0, 255, 255, 0.5);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(168, 85, 247, 0.2);
 }
+
 .placeholder-card {
-    background-color: var(--vt-c-black-soft);
-    border: 1px dashed var(--vt-c-indigo);
-    border-radius: 10px;
-    padding: 2rem;
-    text-align: center;
-    color: var(--vt-c-white);
+  background: rgba(10, 10, 21, 0.8);
+  border: 2px solid var(--vt-c-indigo);
+  border-radius: 10px;
+  padding: 2rem;
+  color: var(--vt-c-white);
+  font-family: sans-serif;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
 }
-@media (max-width: 600px) {
-    .portfolio-section {
-        padding: 2rem 0.5rem;
-    }
-    .section-title {
-        font-size: 1.5rem;
-    }
+
+/* ------------------------------------------------------------- */
+/* ESTILOS DEL BOTÓN DE RETORNO EN CADA SECCIÓN (LOCAL) */
+/* ------------------------------------------------------------- */
+.section-return-button {
+    /* Posicionamiento y alineación dentro de la sección */
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    
+    /* Estilos base (similar al de EducacionCursos.vue) */
+    background: var(--vt-c-card-dark);
+    border: 2px solid var(--neon-green);
+    color: var(--neon-green);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-family: "Orbitron", sans-serif;
+    text-transform: uppercase;
+    
+    /* Efecto Neón Pulso */
+    box-shadow: 0 0 5px var(--neon-green), 0 0 15px rgba(57, 255, 20, 0.4);
+}
+
+.section-return-button:hover {
+    background: var(--neon-green);
+    color: var(--vt-c-black);
+    box-shadow: 0 0 10px var(--neon-green), 0 0 25px var(--neon-green);
+    transform: translateY(-2px);
+}
+
+.section-return-button svg {
+    width: 20px;
+    height: 20px;
+    transform: rotate(180deg); 
+}
+
+
+/* ------------------------------------------------------------- */
+/* ESTILOS DEL BOTÓN GLOBAL "REGRESO AL PERFIL" (FIJO) */
+/* ------------------------------------------------------------- */
+.return-button {
+  position: fixed; /* CLAVE: Fijo en la ventana */
+  bottom: 1.5rem; 
+  right: 1.5rem; 
+  z-index: 100; 
+
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--vt-c-magenta);
+  background: rgba(10, 10, 21, 0.9);
+  color: var(--vt-c-magenta);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  /* Efecto Neón */
+  box-shadow: 0 0 5px var(--vt-c-magenta), 0 0 15px rgba(255, 0, 255, 0.4);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.return-button:hover {
+  background: var(--vt-c-magenta);
+  color: var(--vt-c-black);
+  box-shadow: 0 0 10px var(--vt-c-magenta), 0 0 25px var(--vt-c-magenta);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.return-button svg {
+  width: 60%;
+  height: 60%;
+}
+
+/* 5. DISEÑO RESPONSIVE (Móvil) */
+@media (max-width: 850px) {
+  .portfolio-section.scrollable-section {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .profile-area {
+    height: auto;
+    min-height: 80vh;
+  }
+
+  /* Ajuste del botón fijo en móvil */
+  .return-button {
+    right: 1rem;
+    bottom: 1rem; 
+    width: 45px;
+    height: 45px;
+  }
 }
 </style>

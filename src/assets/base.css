@@ -9,9 +9,9 @@
   --vt-c-black-mute: #283049; 
   --vt-c-white: #ebe0ff; 
   --vt-c-white-soft: #b8b8d1; 
-  --vt-c-indigo: #a855f7; /* Púrpura principal */
-  --vt-c-cyan: #00ffff; /* Cyan de contraste */
-  --vt-c-magenta-original: #ff1493; /* Rosa de contraste */
+  --vt-c-indigo: #a855f7; 
+  --vt-c-cyan: #00ffff; 
+  --vt-c-magenta-original: #ff1493;
 
   /* VARIABLES SEMÁNTICAS */
   --color-background: var(--vt-c-black); 
@@ -21,6 +21,7 @@
   
   --vt-c-dark-bg: var(--vt-c-black); 
   --vt-c-card-dark: var(--vt-c-black-soft);
+  --btn-inner-bg: #272822; 
 }
 
 /* ESTILOS GLOBALES Y RESETEO CSS */
@@ -45,7 +46,8 @@ html {
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow-x: hidden; /* CLAVE: Evita el scroll horizontal */
+    /* CLAVE: Evita el scroll horizontal forzado por el HTML/BODY */
+    overflow-x: hidden; 
     background: var(--color-background); 
 }
 
@@ -65,7 +67,7 @@ body {
   line-height: 1.6; 
   font-size: 15px; 
   
-  /* DETALLE DE FONDO: Efecto nebulosa/gradiente sutil */
+  /* DETALLE DE FONDO */
   background-image: radial-gradient(at 10% 10%, rgba(168, 85, 247, 0.1), transparent 50%),
     radial-gradient(at 90% 90%, rgba(0, 255, 255, 0.15), transparent 50%); 
   background-color: var(--color-background); 
