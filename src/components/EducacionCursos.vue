@@ -766,30 +766,29 @@ const itemActivo = computed(() =>
 }
 
 /* ------------------------------------------------------------- */
-/* 5. CONTENEDOR CIRCULAR para el BOTÓN "Volver Arriba" (¡CORREGIDO!) */
+/* 5. CONTENEDOR CIRCULAR para el BOTÓN "Volver Arriba"  */
 /* ------------------------------------------------------------- */
 .contenedor-btn-regreso-neon {
-    /* ✨ CAMBIO CLAVE: position: absolute ✨ */
-    position: absolute; 
-    bottom: 30px; /* Distancia desde abajo de la sección */
-    right: 30px; /* Distancia desde la derecha de la sección */
-    /* Z-index bajo porque está dentro del flujo del documento */
-    z-index: 10; 
+    /* ✨ CAMBIO CRUCIAL 2: Cambiar fixed a absolute para que se posicione con el contenedor */
+    position: absolute;
+    bottom: 30px; /* Distancia desde abajo */
+    right: 30px; /* Distancia desde la derecha */
+    z-index: 10; /* Z-index reducido para no interferir con elementos flotantes globales */
 
-    /* Dimensiones y forma del contenedor (Mantenidas) */
+    /* Dimensiones y forma del contenedor */
     width: 65px; 
     height: 65px;
     border-radius: 50%; 
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    cursor: pointer; 
     
-    /* Fondo y borde para que se destaque (Mantenidos) */
-    background: radial-gradient(circle at 50% 50%, #2a2a2e 0%, var(--bgColor) 100%);
-    border: 2px solid var(--neon-green);
-    
-    /* Múltiples sombras de neón animadas (Mantenidas) */
+    /* Fondo y borde para que se destaque */
+    background: radial-gradient(circle at 50% 50%, #2a2a2e 0%, var(--vt-c-black-soft) 100%);
+    border: 2px solid var(--neon-green); 
+
+    /* Múltiples sombras de neón animadas para el CONTENEDOR */
     box-shadow: 
         0 0 10px rgba(57, 255, 20, 0.7), 
         0 0 25px var(--neon-blue), 
@@ -835,7 +834,7 @@ const itemActivo = computed(() =>
 }
 
 .contenedor-btn-regreso-neon:hover {
-    border-color: var(--vt-c-white); 
+  border-color: var(--vt-c-white); 
     box-shadow: 
         0 0 15px var(--neon-green), 
         0 0 30px var(--neon-green), 
@@ -847,10 +846,10 @@ const itemActivo = computed(() =>
 
 /* Estilos del BOTÓN INTERNO (Simplificado) (Mantenidos) */
 .btn-flotante-volver-arriba {
-    width: 50px; 
+  width: 50px; 
     height: 50px;
     border-radius: 50%; 
-    background: transparent; 
+    background:  #ff00ff; 
     border: none; 
     color: var(--neon-green); 
     display: flex;
@@ -862,21 +861,22 @@ const itemActivo = computed(() =>
 }
 
 .btn-flotante-volver-arriba:hover {
-    color: var(--vt-c-white); 
+  color: var(--vt-c-white); 
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); 
     transform: scale(1.05); 
 }
 
+
 .btn-flotante-volver-arriba svg {
-    width: 26px; 
+  width: 26px; 
     height: 26px;
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
     transform: translateY(0px) rotateZ(0deg); 
 }
 
 .btn-flotante-volver-arriba:hover svg {
-    transform: translateY(-8px) rotateZ(5deg); 
-    filter: drop-shadow(0 0 5px var(--vt-c-white)); 
+  transform: translateY(-8px) rotateZ(5deg); 
+  filter: drop-shadow(0 0 5px var(--vt-c-white)); 
 }
 
 

@@ -203,7 +203,7 @@ const experiencia = ref([
       "Implementación de macros y scripts en JavaScript para optimizar la entrada y validación de datos contables",
       "Creación de material de capacitación detallado para el personal sobre las nuevas herramientas digitales, asegurando una adopción fluida."
     ],
-    enlace: "#",
+    enlace: "https://www.instagram.com/losnoqueswines/?hl=es",
     enlaceTexto: "Análisis de Datos",
   },
   {
@@ -215,7 +215,7 @@ const experiencia = ref([
       "Desarrollo de pequeños programas en Python para automatizar el cambio de formato y tamaño de imágenes",
       "Gestión de repositorios y control de versiones para los activos creativos, facilitando la colaboración en equipo."
     ],
-    enlace: "#",
+    enlace: "https://es.wix.com/blog/portafolios-de-arte-y-diseno?utm_source=google&utm_medium=cpc&utm_campaign=23166757638^188414526698^search%20-%20dsa&experiment_id=^^7",
     enlaceTexto: "Ver Portafolio de Arte",
   },
 ]);
@@ -665,7 +665,7 @@ const itemActivo = computed(() =>
     width: 50px; 
     height: 50px;
     border-radius: 50%; 
-    background: transparent; 
+    background:  #ff00ff; 
     border: none; 
     color: var(--neon-green); 
     display: flex;

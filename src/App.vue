@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar.vue";
 import DatosPersonales from "./components/DatosPersonales.vue";
 import EducacionCursos from "./components/EducacionCursos.vue";
 import ExperienciaLaboral from "./components/ExperienciaLaboral.vue";
+import ProyectoCarrusel from "./components/ProyectoCarrusel.vue";
 
 const datosPersonalesRef = ref(null);
 
@@ -64,29 +65,27 @@ function handleContactoClick() {
         </section>
 
         <!-- SECCIÓN PROYECTOS (Placeholder): Se añade el botón directamente -->
-        <section id="proyectos" class="portfolio-section scrollable-section centered-content relative-section">
-          <h2 class="section-title">Proyectos</h2>
-          <div class="placeholder-card">
-            <p>Contenido de la sección Proyectos.</p>
-          </div>
-          <!-- Botón de retorno local para la sección -->
-         
+        <section
+          id="proyectos"
+          class="portfolio-section scrollable-section centered-content relative-section"
+        >
+          <ProyectoCarrusel :on-return-to-top="scrollToProfileArea" />
         </section>
 
         <!-- SECCIÓN HABILIDADES (Placeholder): Se añade el botón directamente -->
-        <section id="habilidades" class="portfolio-section scrollable-section centered-content relative-section">
+        <section
+          id="habilidades"
+          class="portfolio-section scrollable-section centered-content relative-section"
+        >
           <h2 class="section-title">Habilidades</h2>
           <div class="placeholder-card">
             <p>Contenido de la sección Habilidades.</p>
           </div>
-       
-
         </section>
       </main>
     </div>
 
     <!-- BOTÓN DE SCROLL FIJO GLOBAL (Opción adicional para usabilidad) -->
-
   </div>
 </template>
 
@@ -114,7 +113,7 @@ function handleContactoClick() {
   min-height: 100vh;
   width: 100vw;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   overflow-x: hidden;
 }
 
@@ -131,7 +130,7 @@ function handleContactoClick() {
   border-bottom: 2px solid var(--vt-c-indigo);
   box-shadow: 0 5px 10px rgba(168, 85, 247, 0.5), 0 0 10px rgba(168, 85, 247, 0.3);
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   box-sizing: border-box;
 }
@@ -141,10 +140,10 @@ function handleContactoClick() {
 /* ======================================================= */
 .content-wrapper {
   width: 100%;
-  min-height: calc(100vh - var(--navbar-height)); 
+  min-height: calc(100vh - var(--navbar-height));
   display: flex;
   flex-direction: column;
-  padding-bottom: 20px; 
+  padding-bottom: 20px;
 }
 
 /* 3. ÁREA DE PERFIL (Centrado de la Tarjeta) */
@@ -170,11 +169,11 @@ function handleContactoClick() {
 /* ------------------------------------------------------------- */
 .portfolio-section.scrollable-section {
   min-height: 100vh;
-  padding: 5rem var(--content-gap); 
+  padding: 5rem var(--content-gap);
   border-bottom: 1px dashed rgba(168, 85, 247, 0.2);
   box-sizing: border-box;
   max-width: var(--max-content-width);
-  margin: 0 auto; 
+  margin: 0 auto;
 }
 
 .portfolio-section:last-child {
@@ -184,7 +183,7 @@ function handleContactoClick() {
 
 /* Clase para que el botón local funcione con position: absolute */
 .relative-section {
-    position: relative;
+  position: relative;
 }
 
 .centered-content {
@@ -222,52 +221,52 @@ function handleContactoClick() {
 /* ESTILOS DEL BOTÓN DE RETORNO EN CADA SECCIÓN (LOCAL) */
 /* ------------------------------------------------------------- */
 .section-return-button {
-    /* Posicionamiento y alineación dentro de la sección */
-    margin-top: 3rem;
-    margin-bottom: 1rem;
-    
-    /* Estilos base (similar al de EducacionCursos.vue) */
-    background: var(--vt-c-card-dark);
-    border: 2px solid var(--neon-green);
-    color: var(--neon-green);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    font-family: "Orbitron", sans-serif;
-    text-transform: uppercase;
-    
-    /* Efecto Neón Pulso */
-    box-shadow: 0 0 5px var(--neon-green), 0 0 15px rgba(57, 255, 20, 0.4);
+  /* Posicionamiento y alineación dentro de la sección */
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+
+  /* Estilos base (similar al de EducacionCursos.vue) */
+  background: var(--vt-c-card-dark);
+  border: 2px solid var(--neon-green);
+  color: var(--neon-green);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+
+  /* Efecto Neón Pulso */
+  box-shadow: 0 0 5px var(--neon-green), 0 0 15px rgba(57, 255, 20, 0.4);
 }
 
 .section-return-button:hover {
-    background: var(--neon-green);
-    color: var(--vt-c-black);
-    box-shadow: 0 0 10px var(--neon-green), 0 0 25px var(--neon-green);
-    transform: translateY(-2px);
+  background: var(--neon-green);
+  color: var(--vt-c-black);
+  box-shadow: 0 0 10px var(--neon-green), 0 0 25px var(--neon-green);
+  transform: translateY(-2px);
 }
 
 .section-return-button svg {
-    width: 20px;
-    height: 20px;
-    transform: rotate(180deg); 
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
 }
-
 
 /* ------------------------------------------------------------- */
 /* ESTILOS DEL BOTÓN GLOBAL "REGRESO AL PERFIL" (FIJO) */
 /* ------------------------------------------------------------- */
+
 .return-button {
   position: fixed; /* CLAVE: Fijo en la ventana */
-  bottom: 1.5rem; 
-  right: 1.5rem; 
-  z-index: 100; 
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
 
   width: 50px;
   height: 50px;
@@ -315,7 +314,7 @@ function handleContactoClick() {
   /* Ajuste del botón fijo en móvil */
   .return-button {
     right: 1rem;
-    bottom: 1rem; 
+    bottom: 1rem;
     width: 45px;
     height: 45px;
   }
