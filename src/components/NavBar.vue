@@ -32,7 +32,7 @@
 // =========================================================
 // 1. SETUP Y EMIT
 // =========================================================
-import { defineEmits, ref } from "vue";
+import { ref } from "vue";
 
 // Define el evento que voltea la tarjeta
 const emit = defineEmits(["contacto-click"]);

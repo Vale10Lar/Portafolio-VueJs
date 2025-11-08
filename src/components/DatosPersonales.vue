@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted, defineExpose } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 
 // =========================================================
 // IMPORTACIONES DE ASSETS (Imágenes y SVGs)
