@@ -1,472 +1,441 @@
 <template>
+  <!-- CONTENEDOR PRINCIPAL DE LA SECCION -->
+  <!-- Se utiliza 'educacion' como ID para la navegación interna -->
   <section id="educacion" class="contenedor-educacion-cursos">
+    <!-- TÍTULO PRINCIPAL DE LA SECCIÓN (Estilo Neón) -->
     <h2 class="titulo-seccion">Educación y Cursos</h2>
 
+    <!-- Contenedor general para la interacción de la línea de tiempo -->
     <div class="contenedor-interactivo-tiempo">
+      <!-- Contenedor de los botones de Años/Eventos (la "Línea de Tiempo") -->
       <div class="contenedor-anos-tiempo">
-        <div
+        <!-- Iteración sobre el array 'educacion' para crear los botones de la línea de tiempo -->
+        <button
           v-for="(item, indice) in educacion"
           :key="indice"
           :class="['boton-ano', { activo: indiceActivo === indice }]"
           :style="{ '--accent-color': coloresItems[indice % coloresItems.length].color }"
           @click="alternarActivo(indice)"
+          :aria-label="`Ver detalle de ${item.fecha}`"
+          :aria-expanded="indiceActivo === indice"
         >
+          <!-- Pulso Neón para indicar que la sección está inactiva y lista para interactuar -->
           <span :class="{ 'pulso-neon': indiceActivo === -1 }">
             {{ item.fecha }}
           </span>
-        </div>
+        </button>
       </div>
 
+      <!-- Contenedor para mostrar el Contenido Detallado de la selección -->
       <div class="contenedor-muestra-contenido-tiempo">
-        <div v-if="indiceActivo === -1" class="contenedor-contenido tarjeta-bienvenida">
-          <div class="grupo-titulo-muestra">
-            <h3 class="titulo titulo-bienvenida">¡Bienvenido!</h3>
+        <!-- Transición Vue: Utiliza el modo 'out-in' para que la tarjeta actual salga antes de que la nueva entre -->
+        <Transition name="slide-fade" mode="out-in">
+          <!-- TARJETA 1: Estado de Bienvenida (Se muestra cuando indiceActivo es -1) -->
+          <div
+            v-if="indiceActivo === -1"
+            key="bienvenida"
+            class="contenedor-contenido tarjeta-bienvenida"
+          >
+            <div class="grupo-titulo-muestra">
+              <h3 class="titulo titulo-bienvenida">¡Bienvenido!</h3>
+            </div>
+
+            <div class="descripcion">Explora mi trayectoria académica.</div>
+
+            <!-- Botón de Acción para Iniciar la Línea de Tiempo -->
+            <button
+              class="boton-accion-nuevo pulso-enlace"
+              :style="{ '--clr': coloresItems[0].color }"
+              @click="alternarActivo(0)"
+            >
+              <span>Empezar {{ educacion[0].fecha }}</span>
+              <i></i>
+            </button>
           </div>
 
-          <div class="descripcion">Explora mi trayectoria academica.</div>
-
-          <button
-            class="boton-accion-nuevo pulso-enlace"
-            :style="{ '--clr': coloresItems[0].color }"
-            @click="manejarClicEmpezar($event)"
+          <!-- TARJETA 2: Contenido Activo (Se muestra cuando se selecciona un ítem) -->
+          <div
+            v-else-if="itemActivo"
+            :key="itemActivo.fecha"
+            class="contenedor-contenido tarjeta-contenido-activa"
+            :style="{ '--accent-color': coloresItems[indiceActivo % coloresItems.length].color }"
           >
-            <span>Empezar {{ educacion[0].fecha }}</span>
+            <!-- Botón para cerrar la tarjeta y volver al estado de bienvenida (-1) -->
+            <button class="boton-cerrar" @click="establecerActivo(-1)" aria-label="Cerrar detalle">
+              [ X ]
+            </button>
 
-            <i></i>
-          </button>
-        </div>
+            <div class="grupo-titulo-muestra">
+              <h3 class="titulo">{{ itemActivo.title }}</h3>
+              <!-- Fecha solo visible en dispositivos móviles -->
+              <span class="fecha-muestra-movil">{{ itemActivo.fecha }}</span>
+            </div>
 
-        <div
-          v-else-if="itemActivo"
-          :key="itemActivo.fecha"
-          class="contenedor-contenido tarjeta-contenido-activa"
-          :style="{ '--accent-color': coloresItems[indiceActivo % coloresItems.length].color }"
-        >
-          <button
-            class="boton-cerrar"
-            @click="
-              generarParticulas($event);
-              establecerActivo(-1);
-            "
-          >
-            [ X ]
-          </button>
+            <!-- Descripción del curso/logro -->
+            <div class="descripcion">{{ itemActivo.descripcion }}</div>
 
-          <div class="grupo-titulo-muestra">
-            <h3 class="titulo">{{ itemActivo.title }}</h3>
-
-            <span class="fecha-muestra-movil">{{ itemActivo.fecha }}</span>
+            <!-- Enlace de Acción con estilo Neón Dinámico -->
+            <a
+              class="boton-accion-nuevo enlace-accion"
+              :href="itemActivo.enlace"
+              target="_blank"
+              :style="{ '--clr': coloresItems[indiceActivo % coloresItems.length].color }"
+              @click="establecerActivo(-1)"
+            >
+              <span>
+                {{ itemActivo.enlaceTexto }}
+              </span>
+              <i></i>
+            </a>
           </div>
-
-          <div class="descripcion">{{ itemActivo.descripcion }}</div>
-
-          <a
-            class="boton-accion-nuevo enlace-accion"
-            :href="itemActivo.enlace"
-            target="_blank"
-            :style="{ '--clr': coloresItems[indiceActivo % coloresItems.length].color }"
-            @click="
-              generarParticulas($event);
-              establecerActivo(-1);
-            "
-          >
-            <span>
-              {{ itemActivo.enlaceTexto }}
-            </span>
-
-            <i></i>
-          </a>
-        </div>
+        </Transition>
       </div>
     </div>
-
-    <div class="contenedor-btn-regreso-neon">
-      <button 
-        @click="volverArriba" 
-        class="btn-flotante-volver-arriba"
-        aria-label="Volver a Navegación Principal"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
-        </svg>
-      </button>
-    </div>
-
-    <div id="contenedor-particulas" ref="contenedorParticulas"></div>
   </section>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 
-// Método para hacer scroll a la parte superior de la ventana (donde está la barra de navegación)
-const volverArriba = () => {
-  window.scrollTo({
-    top: 0, 
-    behavior: 'smooth' 
-  });
-};
+// ==============================================
+// 1. Estado Reactivo
+// ==============================================
 
+// Estado que guarda el índice del elemento de educación activo.
+// -1: Estado inicial o de bienvenida.
 const indiceActivo = ref(-1);
 
+// ==============================================
+// 2. Funciones de Lógica
+// ==============================================
+
+// Establece un índice específico como activo.
 const establecerActivo = (indice) => {
   indiceActivo.value = indice;
 };
 
+// Alterna el estado activo: si está activo, lo desactiva (-1); si está inactivo, lo activa.
 const alternarActivo = (indice) => {
   if (indiceActivo.value === indice) {
-    indiceActivo.value = -1;
+    indiceActivo.value = -1; // Desactivar
   } else {
-    indiceActivo.value = indice;
+    indiceActivo.value = indice; // Activar
   }
 };
 
-// --- Template Ref para el contenedor de partículas ---
+// ==============================================
+// 3. Datos y Constantes
+// ==============================================
 
-const contenedorParticulas = ref(null);
-
-// --- Lógica del Efecto de Partículas ---
-
-const generarParticulas = (evento) => {
-  const contenedor = contenedorParticulas.value;
-
-  if (!contenedor) return;
-
-  // 1. Obtener la posición del clic (o centro del botón) en la ventana
-
-  const rectBoton = evento.currentTarget.getBoundingClientRect();
-
-  const clickX = rectBoton.left + rectBoton.width / 2;
-
-  const clickY = rectBoton.top + rectBoton.height / 2;
-
-  // 2. Obtener la posición del contenedor de partículas
-
-  const rectContenedor = contenedor.getBoundingClientRect();
-
-  // 3. Calcular la posición inicial de la partícula relativa al contenedor
-
-  const centroX = clickX - rectContenedor.left;
-
-  const centroY = clickY - rectContenedor.top;
-
-  const cantidadParticulas = Math.floor(Math.random() * 8) + 8;
-
-  const colores = ["var(--vt-c-cyan)", "var(--vt-c-indigo)", "var(--vt-c-magenta)"];
-
-
-  for (let i = 0; i < cantidadParticulas; i++) {
-    const particula = document.createElement("span");
-
-    particula.className = "particula-estrella";
-
-    // Aplicar la posición inicial calculada
-
-    particula.style.left = `${centroX}px`;
-
-    particula.style.top = `${centroY}px`;
-
-    const tamano = Math.random() * 3 + 1;
-
-    particula.style.width = `${tamano}px`;
-
-    particula.style.height = `${tamano}px`;
-
-    const colorParticula = colores[Math.floor(Math.random() * colores.length)];
-
-    particula.style.backgroundColor = colorParticula;
-
-    particula.style.setProperty("--particula-color", colorParticula);
-
-    // Dispersión
-
-    const dx = (Math.random() - 0.5) * 150;
-
-    const dy = (Math.random() - 0.5) * 150;
-
-    const duracion = Math.random() * 0.8 + 0.4;
-
-    particula.style.setProperty("--dx", `${dx}px`);
-
-    particula.style.setProperty("--dy", `${dy}px`);
-
-    particula.style.animationDuration = `${duracion}s`;
-
-    contenedor.appendChild(particula);
-
-    particula.onanimationend = () => {
-      particula.remove();
-    };
-  }
-};
-
-const manejarClicEmpezar = (evento) => {
-  generarParticulas(evento);
-
-  alternarActivo(0);
-};
-
-// --- Datos y Estilos ---
-
+// Array de colores para dar un acento visual diferente a cada ítem.
 const coloresItems = ref([
-  { color: "#39FF14" }, // Verde Neón
-
-  { color: "#0FF0FC" }, // Azul/Cian Neón
-
-  { color: "#FF44CC" }, // Rosa/Magenta Neón
-
-  { color: "#8A2BE2" }, // Morado
+  { color: "var(--vt-c-neon-green)" }, // Verde Neón
+  { color: "var(--color-neon-cyan)" }, // Cian Neón
+  { color: "var(--vt-c-magenta-pure)" }, // Magenta Puro
+  { color: "var(--vt-c-indigo)" }, // Índigo Neón (Púrpura)
 ]);
 
+// Datos de la trayectoria académica y cursos.
 const educacion = ref([
   {
     fecha: "2025",
-
     title: "Técnico Universitario en Programación ",
-
     descripcion:
       "Foco en desarrollo de software, análisis de sistemas, y metodologías ágiles. Preparación para soluciones Full Stack.",
-
     enlace: "https://utn.edu.ar/frsr/",
-
-    enlaceTexto: "Ver Título",
+    enlaceTexto: "Título",
   },
-
   {
     fecha: "2024",
-
     title: "Manejo Avanzado de Bases de Datos ",
-
     descripcion:
       "Estudio intensivo en consultas complejas, optimización de rendimiento y diseño de esquemas relacionales.",
-
     enlace: "https://ejemplo.com/certificado-sql",
-
-    enlaceTexto: "Ver Certificado ",
+    enlaceTexto: " Certificado ",
   },
-
   {
     fecha: "2023",
-
     title: "Fundamentos de JavaScript y Backend",
-
     descripcion:
       "Adquisición de bases de programación y lógica del lado del servidor para el desarrollo de APIs web.",
-
     enlace: "https://ejemplo.com/certificado-js",
-
-    enlaceTexto: "Ver Certificado ",
+    enlaceTexto: "Certificado ",
   },
-
   {
     fecha: "2022",
-
     title: "Introducción a Sistemas Operativos",
-
     descripcion:
       "Comprensión de la arquitectura, gestión de memoria y procesos en sistemas operativos como Linux y Windows.",
-
     enlace: "#",
-
-    enlaceTexto: "Ver Certificado",
+    enlaceTexto: " Certificado",
   },
 ]);
 
+// ==============================================
+// 4. Propiedad Computada
+// ==============================================
+
+// Obtiene el objeto de educación completo del ítem activo. Retorna 'null' si está en estado de bienvenida (-1).
 const itemActivo = computed(() =>
   indiceActivo.value !== -1 ? educacion.value[indiceActivo.value] : null
 );
-
 </script>
 
 <style scoped>
+/* ============================================== */
+/* ESTILOS (CSS) - INICIO */
+/* ============================================== */
 
-/* VARIABLES Y ESTILOS BASE */
+/* ============================================== */
+/* 1. Definición de Variables Locales (Derivadas de las Globales) */
+/* ============================================== */
+.contenedor-educacion-cursos {
+  /* Variables RGBA locales creadas a partir de las variables globales para opacidades específicas */
+  --rgba-indigo-05: rgba(168, 85, 247, 0.5); /* Sombra de botones */
+  --rgba-indigo-02: rgba(168, 85, 247, 0.2);
+  --rgba-cyan-02: rgba(0, 255, 255, 0.2);
+  --rgba-magenta-02: rgba(255, 0, 255, 0.2);
+  --rgba-magenta-07: rgba(255, 0, 255, 0.7);
+  --rgba-green-07: rgba(57, 255, 20, 0.7);
+  --bgColor: var(--vt-c-black-soft); /* Color de fondo oscuro consistente */
 
-:root {
-  --vt-c-cyan: #00ffff;
-  --vt-c-indigo: #a855f7;
-  --vt-c-magenta: #ff00ff;
-  --vt-c-black: #03091b;
-  --vt-c-white: #ebe0ff;
-  --vt-c-black-soft: #151b33;
-  --vt-c-black-mute: #283049;
-  --bgColor: var(--vt-c-black-soft);
-  --neon-green: #39FF14; /* Color para el botón de retorno */
-  --neon-blue: #0FF0FC; /* Añadido para el efecto de luz */
-  --neon-pink: #FF44CC; /* Añadido para el efecto de luz */
-
-
+  /* Degradado para el borde de la tarjeta de bienvenida (Neón Múltiple) */
   --welcome-gradient-border: linear-gradient(
     90deg,
     var(--vt-c-indigo) 0%,
-    var(--vt-c-cyan) 50%,
-    var(--vt-c-magenta) 100%
+    var(--color-neon-cyan) 50%,
+    var(--vt-c-magenta-pure) 100%
   );
-
-  --welcome-title-color: var(--vt-c-indigo);
-
-  /* Variable específica para el fondo interno del nuevo botón */
-  --btn-inner-bg: #272822;
+  --welcome-title-color: var(--vt-c-indigo); /* Color del título de bienvenida */
+  --btn-inner-bg: #272822; /* Fondo interno del botón de acción */
 }
 
-/* 1. Contenedor Principal de Educación */
+/* ============================================== */
+/* 2. ESTILOS GENERALES DEL COMPONENTE Y TÍTULO */
+/* ============================================== */
+
+/* Contenedor Principal (Flexbox, Centrado, Altura Mínima) */
 .contenedor-educacion-cursos {
-  padding: 2rem 1rem;
-  max-width: 100%; 
+  padding: 0.5 rem 1rem 1rem 1rem; /*espaciado interno(superior, iferior, izquierda derecha)*/
+  max-width: auto; /*ancho maximo automatico*/
+  margin: 0 auto; /*centrado horizontal */
+  display: flex; /*flexbox para alineacion*/
+  flex-direction: column; /*direccion de los elementos de la columna*/
+  position: relative;
+  box-sizing: border-box;
+  text-align: center;
+  min-height: 100vh; /* Asegura ocupar la altura total del viewport */
+  justify-content: flex-start;
+  align-items: center;
+  background-color: var(--color-theme-base);
+}
+
+/* Título de la Sección (Estilo Neón Brillante) */
+.titulo-seccion {
+  position: relative; /*para efectos de posicionamiento*/
+  margin-top: 0; /*sin margen superior*/
+  margin-bottom: 4rem; /* margen inferior para separar el titulo del contenido*/
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--vt-c-white);
+  /* Sombra de texto para el efecto neón (Blanco, y acento Verde) */
+  text-shadow: 0 0 10px var(--vt-c-white), 0 0 25px var(--vt-c-white),
+    0 0 40px rgba(57, 255, 20, 0.8);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(168, 85, 247, 0.2); /* Línea decorativa */
+  z-index: 10;
+}
+
+/* ============================================== */
+/* 3. Estilos de la Línea de Tiempo (Años y Botones) */
+/* ============================================== */
+
+/* Contenedor Interactivo (Permite desplazamiento horizontal si es necesario) */
+.contenedor-interactivo-tiempo {
+  overflow-x: auto;
+  padding-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
-  /* CAMBIO CRUCIAL: Posicionamiento relativo para que el botón absoluto funcione dentro */
-  position: relative; 
-  text-align: center; 
+  align-items: center; /* Se ajusta a center para mejor consistencia */
+  width: 100%; /* Ocupa el 100% del padre para gestionar el scroll */
 }
 
-.titulo-seccion {
-  font-family: "Orbitron", sans-serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: var(--vt-c-indigo);
-  text-shadow: 0 0 5px var(--vt-c-indigo), 0 0 15px rgba(168, 85, 247, 0.5);
-  border-bottom: 2px solid var(--vt-c-black-mute);
-  padding-bottom: 0.5rem;
-}
-
-/* Contenedor de los Años */
-
+/* Contenedor de los Botones de Años */
 .contenedor-anos-tiempo {
   display: flex;
+  flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  /*minimo ancho para la línea de tiempo horizontal. Si el viewport es más pequeño, activa el scroll interno del padre. */
-  min-width: 650px;/* Asegura un mínimo para que los 4 botones se separen bien */
+  /* Ancho mínimo que fuerza el scroll en pantallas pequeñas, creando la línea de tiempo */
+  min-width: 1000px;
   width: 100%;
-  align-items: flex-end;
+  align-items: center;
   padding-bottom: 1rem;
-  border-bottom: 3px dashed var(--vt-c-cyan);
+  /* Línea horizontal que representa la línea de tiempo base */
+  border-bottom: 3px dashed var(--color-neon-cyan);
 }
 
+/* Botón de Año (Estilo Caja con Borde Neón y Sombra) */
 .boton-ano {
   font-family: "Orbitron", sans-serif;
   font-weight: 700;
   font-size: 1.2rem;
+  margin: 0 0.5rem;
   color: var(--vt-c-white);
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   background: var(--bgColor);
-  border: 2px dashed #ce5ece;
-  box-shadow: 0 0 10px rgba(52, 8, 228, 0.7);
-
-  /* Aseguramos que no crezcan más de lo necesario */
-
-  flex-shrink: 0;
+  border: 2px dashed var(--vt-c-magenta-pure);
+  box-shadow: 0 0 10px var(--rgba-indigo-05); /* Sombra inicial sutil */
+  flex-shrink: 0; /* Evita que los botones se achiquen */
 }
 
+/* Animación de Pulso para el texto (Estado inicial, cuando ninguno está activo) */
 .pulso-neon {
   display: inline-block;
   animation: neon-pulse 1.5s infinite alternate ease-in-out;
 }
-
+/*animaciones*/
 @keyframes neon-pulse {
   from {
     text-shadow: 0 0 5px var(--vt-c-white), 0 0 10px var(--vt-c-white);
     opacity: 0.8;
   }
-
   to {
-    text-shadow: 0 0 15px var(--vt-c-cyan), 0 0 25px var(--vt-c-cyan);
+    text-shadow: 0 0 15px var(--color-neon-cyan), 0 0 25px var(--color-neon-cyan);
     opacity: 1;
   }
 }
 
+/* Estilos para el estado :hover y .activo */
 .boton-ano:hover,
 .boton-ano.activo {
   color: var(--vt-c-black);
-  transform: translateY(-5px);
-  background-color: var(--accent-color);
+  transform: translateY(-5px); /* Efecto de elevación */
+  background-color: var(--accent-color); /* Color de fondo dinámico */
+  /* Sombra Neón dinámica, basada en el color de acento */
   box-shadow: 0 0 5px var(--accent-color), 0 0 15px var(--accent-color),
     0 5px 20px rgba(0, 0, 0, 0.8);
 }
 
+/* Se detiene la animación de pulso cuando un botón está activo */
 .boton-ano.activo .pulso-neon {
   animation: none;
 }
 
+/* Indicador de Punto en la Línea de Tiempo (Círculo con Rotación) */
 .boton-ano::after {
   content: "";
   position: absolute;
-  bottom: -1.7rem;
+  bottom: -1.7rem; /* Se posiciona debajo de la línea */
   left: 50%;
   transform: translateX(-50%);
   width: 1rem;
   height: 1rem;
-  background: var(--vt-c-black);
-  border: 0.25rem solid var(--accent-color);
-  border-radius: 4px;
+  background: var(--bgColor);
+  border: 0.25rem solid var(--accent-color); /* Borde con color de acento dinámico */
+  border-radius: 3px;
   box-shadow: 0 0 8px var(--accent-color);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  animation: rotate 3s linear infinite;
+  animation: rotate 3s linear infinite; /* Animación de rotación continua */
 }
 
 @keyframes rotate {
   from {
     transform: translateX(-50%) rotate(0deg);
   }
-
   to {
     transform: translateX(-50%) rotate(360deg);
   }
 }
 
+/* Efecto de pulso en el indicador cuando el botón está activo */
 .boton-ano.activo::after {
   box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
 }
+
+/* ============================================== */
+/* 4. Contenedor de Muestra de Contenido (Tarjetas) */
+/* ============================================== */
 
 .contenedor-muestra-contenido-tiempo {
   display: flex;
   justify-content: center;
   padding-top: 1rem;
+  width: 100%;
+  position: relative;
+  min-height: 250px; /* Altura mínima consistente */
 }
 
-/* Sombra Neón a la Tarjeta de Contenido Activa */
+/* Animaciones de Transición Vue (Deslizamiento y Desvanecimiento) */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
 
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+/* Ajuste de posición para la transición para evitar que el layout salte */
+.contenedor-muestra-contenido-tiempo > .slide-fade-leave-active {
+  position: absolute;
+  top: 1rem;
+  width: 90%;
+  max-width: 600px;
+}
+
+/* Estilos base de la Tarjeta de Contenido */
 .contenedor-contenido {
   background: var(--bgColor);
   padding: 1.5rem;
   border-radius: 20px;
-
-  /* ESTILOS BASE */
-
-  border: 2px solid var(--accent-color);
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), inset 0 0 5px var(--accent-color);
-  animation: fadeIn 0.5s ease-out;
+  border: 2px solid var(--vt-c-indigo); /* Borde por defecto */
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), inset 0 0 5px var(--vt-c-indigo);
   width: 90%;
   max-width: 600px;
   position: relative;
 }
 
-/* Aplico la sombra neon dinamica para la tarjeta activa */
-
+/* Estilo para la Tarjeta de Contenido Activo (Borde y Sombra Neón Dinámica) */
 .tarjeta-contenido-activa {
-  box-shadow: 0 0 5px var(--accent-color), 0 0 15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 0, 0, 0.8),
-    inset 0 0 5px var(--accent-color), 0 0 20px var(--accent-color);
-}
-
-/* Tarjeta de Bienvenida: Estilo de Borde Degradado */
-
-.tarjeta-bienvenida {
-  border: none;
-  padding: 2px;
-  background: var(--welcome-gradient-border) border-box;
+  border: 2px dashed var(--accent-color);
+  background: linear-gradient(var(--vt-c-black-soft), var(--vt-c-black-soft)) padding-box,
+    linear-gradient(
+        90deg,
+        var(--vt-c-magenta-pure) 0%,
+        /* Magenta Puro */ var(--color-neon-cyan) 50%,
+        /* Cian Neón */ var(--vt-c-indigo) 100% /* Índigo/Morado */
+      )
+      border-box;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2), 0 0 20px rgba(0, 255, 255, 0.2),
-    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(255, 68, 204, 0.2),
+    /* Uso de RGBA del magenta */ 0 0 20px rgba(0, 255, 255, 0.2),
+    /* Uso de RGBA del cian (Mantenido) */ inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Estilos internos de la tarjeta */
+/* Tarjeta de Bienvenida (Borde de Degradado Múltiple) */
+.tarjeta-bienvenida {
+  border: 2px solid transparent;
+  padding: 2px;
+  /* El truco del 'border-box' para crear un borde de degradado */
+  background: linear-gradient(var(--bgColor), var(--bgColor)) padding-box,
+    var(--welcome-gradient-border) border-box;
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--vt-c-magenta-pure), 0 0 20px var(--color-neon-cyan),
+    inset 0 0 5px rgba(255, 255, 255, 0.1);
+}
 
+/* Estilos internos de la tarjeta de bienvenida (para cubrir el degradado) */
 .tarjeta-bienvenida > .grupo-titulo-muestra,
 .tarjeta-bienvenida > .descripcion {
   background: var(--bgColor);
@@ -482,19 +451,7 @@ const itemActivo = computed(() =>
 }
 
 .titulo-bienvenida {
-  color: var(--welcome-title-color);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  color: var(--welcome-title-color); /* Índigo */
 }
 
 .grupo-titulo-muestra {
@@ -502,19 +459,22 @@ const itemActivo = computed(() =>
   border-bottom: 1px dashed var(--vt-c-black-mute);
 }
 
+/* Título del Ítem Activo (Color Cian Neón) */
 .titulo {
   font-weight: 700;
   font-size: 1.5rem;
-  color: var(--vt-c-cyan);
+  color: var(--color-neon-cyan);
   font-family: "Orbitron", sans-serif;
   text-align: center;
   filter: brightness(0.85);
 }
 
+/* Ocultar fecha en desktop, solo se usa en responsive */
 .fecha-muestra-movil {
   display: none;
 }
 
+/* Estilo de la Descripción */
 .descripcion {
   padding-block: 1rem 1.5rem;
   font-weight: 400;
@@ -525,10 +485,8 @@ const itemActivo = computed(() =>
 }
 
 /* ============================================== */
-
-/* 3. ----Estilos del boton----*/
-
-/* Botón base */
+/* 5. Estilos del Botón de Acción (Efecto Cyberpunk/Neón) */
+/* ============================================== */
 
 .boton-accion-nuevo {
   position: relative;
@@ -552,20 +510,47 @@ const itemActivo = computed(() =>
   font-family: "Orbitron", sans-serif;
 }
 
-/* Estado Hover/Focus */
-
+/* Efecto Hover/Focus (Aumento de tamaño y cambio de fondo) */
 .boton-accion-nuevo:hover,
 .boton-accion-nuevo:focus {
   letter-spacing: 0.1rem;
   padding: 0.8rem 2.1rem;
-  background: var(--clr);
+  background: var(--clr); /* Color de acento dinámico */
   color: var(--clr);
-  animation: box 3s infinite;
+  animation: box 3s infinite; /* Animación de pulso de caja */
   outline: none;
 }
 
-/* Fondo interno */
+/* Animación de Pulso de Sombra para el Botón (Basada en --clr) */
+@keyframes box {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--clr);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
 
+/* Pulso Neón Adicional para el botón de Bienvenida */
+.pulso-enlace {
+  animation: pulso-btn-accion 2s infinite alternate ease-in-out;
+}
+
+@keyframes pulso-btn-accion {
+  from {
+    box-shadow: 0 0 5px var(--clr);
+    transform: scale(1);
+  }
+  to {
+    box-shadow: 0 0 10px var(--clr), 0 0 20px var(--clr);
+    transform: scale(1.01);
+  }
+}
+
+/* Capa interior que permite ver el borde neón de fondo en hover */
 .boton-accion-nuevo::before {
   content: "";
   position: absolute;
@@ -576,18 +561,15 @@ const itemActivo = computed(() =>
 }
 
 .boton-accion-nuevo:hover::before {
-  background: #18191f;
+  background: #18191f; /* Fondo ligeramente diferente en hover */
 }
-
-/* Texto (span) */
 
 .boton-accion-nuevo span {
   position: relative;
-  z-index: 1;
+  z-index: 1; /* Asegura que el texto esté por encima de la capa interior */
 }
 
-/* Contenedor del efecto de borde (i) */
-
+/* Elementos decorativos (i) para las tiras */
 .boton-accion-nuevo i {
   position: absolute;
   inset: 0;
@@ -596,7 +578,6 @@ const itemActivo = computed(() =>
 }
 
 /* Tiras superiores/izquierdas */
-
 .boton-accion-nuevo i::before {
   content: "";
   position: absolute;
@@ -604,11 +585,12 @@ const itemActivo = computed(() =>
   height: 2px;
   left: 80%;
   top: -2px;
-  border: 2px solid var(--clr);
+  border: 2px solid var(--clr); /* Color de acento dinámico */
   background: var(--btn-inner-bg);
   transition: 0.2s;
 }
 
+/* Efecto Hover en las tiras superiores */
 .boton-accion-nuevo:hover i::before {
   width: 12px;
   left: 20%;
@@ -616,7 +598,6 @@ const itemActivo = computed(() =>
 }
 
 /* Tiras inferiores/derechas */
-
 .boton-accion-nuevo i::after {
   content: "";
   position: absolute;
@@ -624,68 +605,34 @@ const itemActivo = computed(() =>
   height: 2px;
   left: 20%;
   bottom: -2px;
-  border: 2px solid var(--clr);
+  border: 2px solid var(--clr); /* Color de acento dinámico */
   background: var(--btn-inner-bg);
   transition: 0.2s;
 }
 
+/* Efecto Hover en las tiras inferiores */
 .boton-accion-nuevo:hover i::after {
   width: 12px;
-
   left: 80%;
-
   animation: move 3s infinite;
 }
 
-/* Animaciones */
-
+/* Animación de movimiento sutil de las tiras */
 @keyframes move {
   0% {
     transform: translateX(0);
   }
-
   50% {
     transform: translateX(5px);
   }
-
   100% {
     transform: translateX(0);
   }
 }
 
-@keyframes box {
-  0% {
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  }
-
-  50% {
-    box-shadow: 0 0 20px var(--clr);
-  }
-
-  100% {
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  }
-}
-
-.pulso-enlace {
-  animation: pulso-btn-accion 2s infinite alternate ease-in-out;
-}
-
-@keyframes pulso-btn-accion {
-  from {
-    box-shadow: 0 0 5px var(--clr);
-
-    transform: scale(1);
-  }
-
-  to {
-    box-shadow: 0 0 10px var(--clr), 0 0 20px var(--clr);
-
-    transform: scale(1.01);
-  }
-}
-
-/* --- Botón de Cerrar [X] --- */
+/* ============================================== */
+/* 6. Botón de Cerrar [X] */
+/* ============================================== */
 
 .boton-cerrar {
   position: absolute;
@@ -693,7 +640,7 @@ const itemActivo = computed(() =>
   right: 0.5rem;
   background-color: transparent;
   border: none;
-  color: var(--vt-c-magenta);
+  color: var(--vt-c-magenta-pure); /* Magenta para cerrar/alerta */
   font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
@@ -702,311 +649,77 @@ const itemActivo = computed(() =>
 }
 
 .boton-cerrar:hover {
-  color: var(--vt-c-magenta);
-
-  text-shadow: 0 0 5px var(--vt-c-magenta);
-
+  color: var(--vt-c-magenta-pure);
+  text-shadow: 0 0 5px var(--vt-c-magenta-pure);
   transform: scale(1.1) rotate(5deg);
 }
 
 /* ============================================== */
-
-/* 4.----- Efecto de Partículas---- */
-
-
-
-#contenedor-particulas {
-  position: absolute;
-
-  top: 0;
-
-  left: 0;
-
-  width: 100%;
-
-  height: 100%;
-
-  pointer-events: none;
-
-  overflow: hidden;
-
-  z-index: 5;
-}
-
-.particula-estrella {
-  position: absolute;
-
-  transform: rotate(45deg);
-
-  border-radius: 1px;
-
-  opacity: 1;
-
-  filter: drop-shadow(0 0 1px var(--particula-color)) drop-shadow(0 0 4px var(--particula-color));
-
-  animation: star-fly 1s forwards ease-out;
-}
-
-@keyframes star-fly {
-  0% {
-    opacity: 1;
-
-    transform: translate(0, 0) rotate(45deg) scale(1);
-  }
-
-  20% {
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate(var(--dx), var(--dy)) rotate(45deg) scale(0);
-
-    opacity: 0;
-  }
-}
-
-/* ------------------------------------------------------------- */
-/* 5. CONTENEDOR CIRCULAR para el BOTÓN "Volver Arriba"  */
-/* ------------------------------------------------------------- */
-.contenedor-btn-regreso-neon {
-    /* ✨ CAMBIO CRUCIAL 2: Cambiar fixed a absolute para que se posicione con el contenedor */
-    position: absolute;
-    bottom: 30px; /* Distancia desde abajo */
-    right: 30px; /* Distancia desde la derecha */
-    z-index: 10; /* Z-index reducido para no interferir con elementos flotantes globales */
-
-    /* Dimensiones y forma del contenedor */
-    width: 65px; 
-    height: 65px;
-    border-radius: 50%; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer; 
-    
-    /* Fondo y borde para que se destaque */
-    background: radial-gradient(circle at 50% 50%, #2a2a2e 0%, var(--vt-c-black-soft) 100%);
-    border: 2px solid var(--neon-green); 
-
-    /* Múltiples sombras de neón animadas para el CONTENEDOR */
-    box-shadow: 
-        0 0 10px rgba(57, 255, 20, 0.7), 
-        0 0 25px var(--neon-blue), 
-        0 0 40px var(--neon-pink); 
-    animation: container-neon-pulse 3.5s infinite alternate ease-in-out; 
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Animación de luz y color para el CONTENEDOR (Mantenida) */
-@keyframes container-neon-pulse {
-    0% {
-        box-shadow: 
-            0 0 10px rgba(57, 255, 20, 0.7), 
-            0 0 25px var(--neon-blue), 
-            0 0 40px var(--neon-pink);
-        border-color: var(--neon-green);
-        transform: scale(1) translateY(0);
-    }
-    33% {
-        box-shadow: 
-            0 0 15px var(--neon-blue), 
-            0 0 30px var(--neon-pink), 
-            0 0 50px var(--neon-green);
-        border-color: var(--neon-blue);
-        transform: scale(1.02) translateY(-2px);
-    }
-    66% {
-        box-shadow: 
-            0 0 12px var(--neon-pink), 
-            0 0 28px var(--neon-green), 
-            0 0 45px var(--neon-blue);
-        border-color: var(--neon-pink);
-        transform: scale(0.98) translateY(2px);
-    }
-    100% {
-        box-shadow: 
-            0 0 10px rgba(57, 255, 20, 0.7), 
-            0 0 25px var(--neon-blue), 
-            0 0 40px var(--neon-pink);
-        border-color: var(--neon-green);
-        transform: scale(1) translateY(0);
-    }
-}
-
-.contenedor-btn-regreso-neon:hover {
-  border-color: var(--vt-c-white); 
-    box-shadow: 
-        0 0 15px var(--neon-green), 
-        0 0 30px var(--neon-green), 
-        0 0 60px var(--neon-green); 
-    transform: scale(1.08); 
-    animation: none; 
-}
-
-
-/* Estilos del BOTÓN INTERNO (Simplificado) (Mantenidos) */
-.btn-flotante-volver-arriba {
-  width: 50px; 
-    height: 50px;
-    border-radius: 50%; 
-    background:  #ff00ff; 
-    border: none; 
-    color: var(--neon-green); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 5px rgba(57, 255, 20, 0.3); 
-}
-
-.btn-flotante-volver-arriba:hover {
-  color: var(--vt-c-white); 
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); 
-    transform: scale(1.05); 
-}
-
-
-.btn-flotante-volver-arriba svg {
-  width: 26px; 
-    height: 26px;
-    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
-    transform: translateY(0px) rotateZ(0deg); 
-}
-
-.btn-flotante-volver-arriba:hover svg {
-  transform: translateY(-8px) rotateZ(5deg); 
-  filter: drop-shadow(0 0 5px var(--vt-c-white)); 
-}
-
-
-/* 6.--- RESPONSIVE MÓVIL/TABLET ----*/
+/* 7. RESPONSIVE MÓVIL/TABLET */
+/* ============================================== */
 
 @media (max-width: 768px) {
   .contenedor-educacion-cursos {
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
+    /* Altura dinámica para mejor ajuste móvil */
+    min-height: calc(100dvh - 2rem);
   }
 
+  .titulo-seccion {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* El contenedor permite scroll horizontal en móviles */
   .contenedor-interactivo-tiempo {
-    flex-direction: column;
-
+    overflow-x: auto;
     gap: 1.5rem;
-
-    overflow-x: hidden;
+    padding-bottom: 0.5rem;
   }
-
-  /* MODO MÓVIL para los botones de año */
 
   .contenedor-anos-tiempo {
-    flex-direction: column;
-
-    align-items: center;
-
-    border-bottom: none;
-
-    padding-bottom: 0;
-
-    min-width: auto;
-
-    width: 100%;
+    flex-direction: row;
+    justify-content: flex-start; /* Fuerza el scroll horizontal */
+    min-width: 550px;
+    width: auto;
+    padding-bottom: 1rem;
+    border-bottom: 3px dashed var(--color-neon-cyan);
   }
 
   .boton-ano {
-    width: 80%;
-
-    max-width: 300px;
-
     font-size: 1rem;
-
-    position: relative;
-
-    margin-bottom: 0.5rem;
-
+    margin: 0 0.25rem;
     transform: none !important;
-
-    flex-shrink: 1;
   }
 
   .boton-ano:hover {
     transform: scale(1.03) !important;
   }
 
+  /* Se mantiene el indicador ::after en el móvil */
   .boton-ano::after {
-    content: none;
+    content: "";
   }
 
   .contenedor-contenido {
     padding: 1rem;
-
     width: 95%;
-
     max-width: none;
   }
 
-  .tarjeta-bienvenida {
-    display: block;
-  }
-
-  .titulo {
-    font-size: 1.2rem;
-  }
-
-  .descripcion {
-    font-size: 0.9rem;
-  }
-
-  /* Ajuste de botón en móvil */
-
+  /* Botones de acción más grandes y centrados en móvil */
   .boton-accion-nuevo {
     width: 90%;
-
     max-width: 250px;
-
     padding: 0.6rem 1rem;
-
     font-size: 0.75rem;
-
     letter-spacing: 0.05rem;
   }
 
   .boton-accion-nuevo:hover,
   .boton-accion-nuevo:focus {
     padding: 0.7rem 1.1rem;
-
     letter-spacing: 0.1rem;
-  }
-
-  /* Ajuste del contenedor flotante para móviles */
-  .contenedor-btn-regreso-neon {
-    /* Mantiene absolute */
-    bottom: 20px;
-    right: 20px;
-    width: 55px; 
-    height: 55px;
-    box-shadow: 
-        0 0 8px rgba(57, 255, 20, 0.5), 
-        0 0 15px var(--neon-blue), 
-        0 0 25px var(--neon-pink); 
-    animation: container-neon-pulse 3.5s infinite alternate ease-in-out; 
-  }
-
-  .contenedor-btn-regreso-neon:hover {
-      transform: scale(1.05); 
-  }
-
-  /* Ajuste del botón interno para móviles */
-  .btn-flotante-volver-arriba {
-    width: 40px;
-    height: 40px;
-  }
-
-  .btn-flotante-volver-arriba svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .btn-flotante-volver-arriba:hover svg {
-    transform: translateY(-6px) rotateZ(3deg); 
   }
 }
 </style>

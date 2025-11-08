@@ -1,85 +1,234 @@
-/* ARCHIVO BASE CSS (Variables y Reseteo) */
+/*
+ * ----------------------------------------------------------------------
+ * ARCHIVO BASE CSS (Variables, Reseteo y Fondo del Tema)
+ * ----------------------------------------------------------------------
+
+/* *  1. Importación de Fuentes Temáticas */
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap");
 
-/* PALETA DE COLORES PERSONALIZADA: "NEON LIGHTS" */
+/* *  2. PALETA DE COLORES PERSONALIZADA: "NEON LIGHTS" */
 :root {
-  /* ... (Tus variables de color) ... */
-  --vt-c-black: #03091b; 
-  --vt-c-black-soft: #151b33; 
-  --vt-c-black-mute: #283049; 
-  --vt-c-white: #ebe0ff; 
-  --vt-c-white-soft: #b8b8d1; 
-  --vt-c-indigo: #a855f7; 
-  --vt-c-cyan: #00ffff; 
-  --vt-c-magenta-original: #ff1493;
+  /* ------------------------------------------------------------- */
+  /* CONFIGURACIÓN DE LAYOUT (Añadido desde App.vue) */
+  /* ------------------------------------------------------------- */
+  --navbar-height: 80px; /* Altura fija de la barra de navegación */
+  --content-gap: 30px; /* Espaciado estándar entre secciones */
+  --max-content-width: 1100px; /* Ancho máximo del contenido central */
+  --section-v-padding: 2rem; /* Padding vertical estándar para secciones */
 
-  /* VARIABLES SEMÁNTICAS */
-  --color-background: var(--vt-c-black); 
-  --color-background-soft: var(--vt-c-black-soft); 
-  --color-heading: var(--vt-c-indigo); 
-  --color-text: var(--vt-c-white-soft); 
-  
-  --vt-c-dark-bg: var(--vt-c-black); 
-  --vt-c-card-dark: var(--vt-c-black-soft);
-  --btn-inner-bg: #272822; 
+  /* ------------------------------------------------------------- */
+  /* 1. COLORES NEÓN (PUROS Y BASE) */
+  /* ------------------------------------------------------------- */
+  --vt-c-black: #000000;
+  --vt-c-black-soft: #151b33;
+  --vt-c-black-mute: #283049;
+  --vt-c-indigo: #a855f7;
+  --vt-c-neon-green: #39ff14;
+  --vt-c-neon-blue: #0ff0fc;
+  --vt-c-magenta-pure: #ff00ff;
+  --vt-c-neon-pink: #ff44cc;
+  --vt-c-neon-yellow: #ffff00;
+  --vt-c-magenta-base: #ff1493;
+  --vt-c-purple-electric: #bb00ff;
+
+  /* ------------------------------------------------------------- */
+  /* 2. FONDOS Y NEUTROS */
+  /* ------------------------------------------------------------- */
+  --vt-c-black-darker: #0d0d0d;
+  --vt-c-bg-deep-purple: #0d0014;
+  --color-element-dark: #1a1a1a;
+
+  /* ------------------------------------------------------------- */
+  /* 3. TEXTO Y GRISES */
+  /* ------------------------------------------------------------- */
+  --vt-c-white-brighter: #ebe0ff;
+  --vt-c-white-soft: #c8c8c8; /* Usado como texto principal en App.vue */
+  --vt-c-grey-light: #f3f4f6;
+  --vt-c-grey-medium: #a8a8a8;
+  --vt-c-lavender-soft: #e0cfff;
+
+  /* ------------------------------------------------------------- */
+  /* 4. TRANSPARENCIAS (RGBA) 
+    /* ------------------------------------------------------------- */
+  --vt-c-indigo-40: rgba(168, 85, 247, 0.4);
+  --vt-c-indigo-30: rgba(168, 85, 247, 0.3);
+  --vt-c-indigo-20: rgba(168, 85, 247, 0.2);
+  --vt-c-neon-blue-15: rgba(0, 255, 255, 0.15);
+  --vt-c-neon-blue-10: rgba(0, 255, 255, 0.1);
+  --vt-c-neon-blue-50: rgba(0, 255, 255, 0.5);
+  --vt-c-magenta-pure-70: rgba(255, 0, 255, 0.7);
+
+  /* ------------------------------------------------------------- */
+  /* 5. VARIABLES SEMÁNTICAS (Alias de colores puros para la app) */
+  /* ------------------------------------------------------------- */
+  --color-neon-cyan: var(--vt-c-neon-blue); /* Alias semántico */
+  --color-neon-magenta: var(--vt-c-magenta-pure);
+  --color-neon-green: var(--vt-c-neon-green);
+  --color-neon-indigo: var(--vt-c-indigo);
+  --color-neon-yellow: var(--vt-c-neon-yellow);
+
+  --color-background: var(--vt-c-black);
+  --color-background-soft: var(--vt-c-black-soft);
+  --color-heading: var(--vt-c-indigo);
+  --color-text: var(--vt-c-white-soft);
+  --color-element-card: var(--vt-c-black-soft);
+  --color-text-light: var(--vt-c-white-soft);
+
+  /* Degradado Radial Neón para Body */
+  --background-radial-texture: radial-gradient(at 10% 10%, rgba(168, 85, 247, 0.1), transparent 50%),
+    radial-gradient(at 90% 90%, rgba(0, 255, 255, 0.15), transparent 50%);
 }
 
-/* ESTILOS GLOBALES Y RESETEO CSS */
+/* *  3. RESETEO UNIVERSAL CSS (Resets de margin/padding/box-sizing) */
 *,
 *::before,
 *::after {
-  box-sizing: border-box; 
-  margin: 0; 
-  padding: 0; 
-  font-weight: normal; 
-}
-li {
-  list-style: none; 
-}
-
-/* ---------------------------------------------------------------------- */
-/* --- SOLUCIÓN DEFINITIVA PARA LA FRANJA BLANCA/GRIS --- */
-/* ---------------------------------------------------------------------- */
-
-html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    /* CLAVE: Evita el scroll horizontal forzado por el HTML/BODY */
-    overflow-x: hidden; 
-    background: var(--color-background); 
-}
-
-#app {
-    width: 100%;
-    min-height: 100vh;
-}
-
-body {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  min-height: 100vh; 
-  color: var(--color-text); 
-  background: transparent; 
-  
-  font-family: "Inter", sans-serif; 
-  line-height: 1.6; 
-  font-size: 15px; 
-  
-  /* DETALLE DE FONDO */
-  background-image: radial-gradient(at 10% 10%, rgba(168, 85, 247, 0.1), transparent 50%),
-    radial-gradient(at 90% 90%, rgba(0, 255, 255, 0.15), transparent 50%); 
-  background-color: var(--color-background); 
-  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.8), inset 0 0 100px rgba(0, 0, 0, 0.4);
-  cursor: none; 
+  font-weight: normal;
+}
+/* Eliminar estilos por defecto de listas */
+li {
+  list-style: none;
 }
 
-/* ... (Estilos de cursor-particle) ... */
+/*   4. Estilos de HTML y BODY  */
+html {
+  /* Mantiene el fondo principal de la aplicación */
+  background: var(--color-background);
+  /* Evita el scroll horizontal forzado  */
+  overflow-x: hidden;
+  /* Comportamiento de desplazamiento suave */
+  scroll-behavior: smooth;
+}
+/* Estilos base para el body */
+body {
+  min-height: 100vh; /* Asegura que el body ocupe toda la altura de la ventana */
+  line-height: 1.6; /* Mejora la legibilidad del texto */
+  font-size: 15px; /* Tamaño de fuente base */
+
+  /* Configuración de tema base */
+  color: var(--color-text); /* Texto principal usando alias semántico */
+  font-family: "Inter", sans-serif; /* Fuente principal legible */
+
+  /* Fondo: Combina el color de fondo y la textura neón */
+  background-image: var(--background-radial-texture); /* Textura radial superpuesta */
+  background-color: var(--color-background); /* Color de fondo base */
+  background-attachment: fixed; /* Mantiene la textura fija */
+
+  /* Efectos visuales de profundidad Cyberpunk */
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.8), inset 0 0 100px rgba(0, 0, 0, 0.4);
+  cursor: none;
+}
+
+/* Estilos de cursor-particle  */
 .cursor-particle {
-  position: fixed; 
+  position: fixed;
   border-radius: 50%;
-  pointer-events: none; 
-  z-index: 9999; 
-  opacity: 1; 
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 1;
+}
+/* ────────────────────────────────────────────── */
+/* SEPARADOR NEÓN CIBERPUNK - MODO REACTIVO    */
+/* ────────────────────────────────────────────── */
+.section-separator {
+  width: 80%;
+  height: 3px;
+  margin: 4rem auto;
+  background: linear-gradient(
+    90deg,
+    var(--vt-c-neon-blue),
+    var(--vt-c-magenta-pure),
+    var(--vt-c-neon-blue)
+  );
+  background-size: 200% 100%;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+
+  /* Resplandor ambiental dinámico */
+  box-shadow: 0 0 15px var(--vt-c-neon-blue), 0 0 30px var(--vt-c-magenta-pure),
+    0 0 60px rgba(255, 0, 255, 0.4);
+
+  animation: neonFlow 4s linear infinite, neonBlink 5s ease-in-out infinite alternate,
+    ambientPulse 6s ease-in-out infinite;
+}
+
+/* CHISPA ELÉCTRICA VIAJANDO */
+.section-separator::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10%;
+  width: 12%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(0, 255, 255, 0.4) 40%,
+    transparent 80%
+  );
+  filter: blur(0.8px);
+  box-shadow: 0 0 15px var(--vt-c-neon-blue), 0 0 25px var(--vt-c-magenta-pure),
+    0 0 45px rgba(0, 255, 255, 0.5);
+  animation: sparkTravel 2.8s ease-in-out infinite;
+}
+
+/* Animaciones base */
+@keyframes neonFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes neonBlink {
+  0%,
+  90%,
+  100% {
+    opacity: 1;
+  }
+  93%,
+  97% {
+    opacity: 0.2;
+  }
+}
+
+/* Pulso ambiental del resplandor */
+@keyframes ambientPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 15px var(--vt-c-neon-blue), 0 0 30px var(--vt-c-magenta-pure),
+      0 0 60px rgba(255, 0, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--vt-c-neon-blue), 0 0 60px var(--vt-c-magenta-pure),
+      0 0 90px rgba(0, 255, 255, 0.5);
+  }
+}
+
+/* Movimiento eléctrico de la chispa */
+@keyframes sparkTravel {
+  0% {
+    left: -15%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    left: 50%;
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 120%;
+    opacity: 0;
+  }
 }

@@ -1,27 +1,89 @@
-/* ARCHIVO MAIN CSS (Estructura y Layout CORREGIDO)  */
 
-/* Importa la hoja de estilos 'base.css' que contiene las variables de color y tipografía */
+/* *  1. Importación de Variables Globales de Tema y Reset */
 @import "./base.css";
 
-/* ESTILOS PARA EL CONTENEDOR PRINCIPAL DE LA APLICACION */
+/* *  2. ESTILOS PARA EL CONTENEDOR PRINCIPAL DE LA APLICACION (#app) */
 #app {
-    font-weight: normal; 
-    /* El resto de estilos de layout son manejados por App.vue */
+  /* Consolidados de base.css y main.css */
+  width: 100%;
+  min-height: 100vh;
+  font-weight: normal;
 }
 
-/* ESTILOS PARA HIPERVINCULOS GENERALES */
+/* *  3. ESTILOS PARA ELEMENTOS GLOBALES */
 a {
-    text-decoration: none; 
-    color: var(--vt-c-white); 
+  text-decoration: none;
+  /* Color principal Neón más brillante, ya que body es oscuro. */
+  color: var(--vt-c-white-brighter);
+  transition: color 0.3s;
 }
 
-/* RESPONSIVE DESIGN  */
+button {
+  /* Reset de botones movido desde App.vue */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
 
+/* *  4. CLASES DE UTILIDAD Y COMPONENTES BASE (Movidos desde App.vue:scoped) */
+
+/* Centrado vertical/horizontal reutilizable */
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Posicionamiento relativo (para futuros overlays) */
+.relative-section {
+  position: relative;
+}
+
+.titulo-seccion {
+  position: relative;
+  display: inline-block; /*Clave para que el subrayado mida lo mismo que el texto */
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+.titulo-seccion::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%; /* Se ajusta exactamente al ancho del texto */
+  background: linear-gradient(90deg, #00ffff, #ff00ff);
+  box-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+  border-radius: 4px;
+  animation: brilloNeon 3s ease-in-out infinite alternate;
+}
+
+@keyframes brilloNeon {
+  0% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 5px #00ffff);
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px #ff00ff);
+  }
+}
+
+/* *  5. Estilos Responsivos para Móviles (Max 768px) */
 @media (max-width: 768px) {
-    #app {
-        padding: 0; 
-        font-size: small;
-        width: 100%;
-        max-width: none;
-    }
+  #app {
+    padding: 0;
+    font-size: small;
+    width: 100%;
+    max-width: none;
+  }
 }
